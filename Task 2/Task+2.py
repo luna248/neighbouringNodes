@@ -1,14 +1,15 @@
 
 # coding: utf-8
 
-# In[246]:
+# In[1]:
 
 
 from math import sqrt
 from enum import Enum
+from math import pow
 
 
-# In[442]:
+# In[32]:
 
 
 class neighbouringNodes:
@@ -49,19 +50,31 @@ class neighbouringNodes:
             yCoord = args[2]
             m = args[3]
             shapeType = args[4]
+            
+            #check if x & y coordinates lie within the grid
+            if(xCoord<0 or xCoord>=self.size or yCoord<0 or yCoord>=self.size):
+                print("The origin node lies outside the grid. Enter different coordinates")
+                return
                     
         elif(len(args)) == 4:
             grid = args[0]
             index = args[1] 
             m = args[2] 
             shapeType = args[3]
-            xCoord = self.getNodeCoordinates(grid, index)[0]
-            yCoord = self.getNodeCoordinates(grid, index)[1]
+            
+            if(index> pow(self.size,2)):
+                print("The origin node lies outside the grid. Enter different coordinates")
+                return
+            else:
+                xCoord = self.getNodeCoordinates(grid, index)[0]
+                yCoord = self.getNodeCoordinates(grid, index)[1]
             
         else:
             print("\033[0;31;1mPlease enter valid parameters")
             return
         
+        
+        #Check if radius lies within the grid
         if (xCoord-m)<0 or (yCoord-m)<0 or (xCoord+m)>=self.size or (yCoord+m)>=self.size:
                 print("The given radius exceeds the grid boundaries. Try again.")
                 return
@@ -95,16 +108,27 @@ class neighbouringNodes:
         print("New grid:")
         for i in range(self.size):
             for j in range(self.size):
-                if(gridx[i][j].origin):
-                    print("\033[0;31;35m",gridx[i][j].printCoordinates(), end="\033[0;30;0m ")
-                elif(gridx[i][j].neighbour):
-                    print("\033[0;31;11m",gridx[i][j].printCoordinates(), end="\033[0;30;0m ")
+                if(grid[i][j].origin):
+                    print("\033[0;31;35m",grid[i][j].printCoordinates(), end="\033[0;30;0m ")
+                elif(grid[i][j].neighbour):
+                    print("\033[0;31;11m",grid[i][j].printCoordinates(), end="\033[0;30;0m ")
                 else:
-                    print(gridx[i][j].printCoordinates(), end=" ")
+                    print(grid[i][j].printCoordinates(), end=" ")
             print("\n")
+            
+    def shapeCoords(self, grid):
+        print("Coordinates:")
+        for i in range(self.size):
+            for j in range(self.size):
+                if(grid[i][j].origin):
+                    print("\033[0;31;35m",grid[i][j].printCoordinates(), end="\033[0;30;0m\n")
+                if(grid[i][j].neighbour):
+                    print("\033[0;31;11m",grid[i][j].printCoordinates(), end="\033[0;30;0m\n")
+
+        
 
 
-# In[443]:
+# In[33]:
 
 
 class node:
@@ -132,25 +156,18 @@ class node:
         self.neighbour = True
 
 
-# In[458]:
+# In[39]:
 
 
 # Create object and run the function 
 x= neighbouringNodes(7, True)
 gridx = x.constructGrid()
-
-
-# In[459]:
-
-
-print("Node coordinates:", x.getNodeCoordinates(gridx, 12))
-
-
-# NOTE: If the arguments are being changed in setShape, the original grid might have to be intialized again in some cases for the changes to show
-
-# In[461]:
-
+print("\n")
 
 #Set shape
-x.setShape(gridx, 3, 3, 3, "diamond")
+x.setShape(gridx, 25, 3, "diamond")
+print("\n")
+
+#Show coordinates
+x.shapeCoords(gridx)
 
